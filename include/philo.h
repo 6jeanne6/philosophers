@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:14:58 by jewu              #+#    #+#             */
-/*   Updated: 2024/10/17 18:25:33 by jewu             ###   ########.fr       */
+/*   Updated: 2024/10/21 17:47:59 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int			parse_philo(int argc, char **argv);
 
 /* initialization */
 
-int			init_everything(char **argv);
+int			init_everything(char **argv, t_philo *philosopher);
 
 /* utils */
 
