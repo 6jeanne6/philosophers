@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:14:58 by jewu              #+#    #+#             */
-/*   Updated: 2024/10/21 17:47:59 by jewu             ###   ########.fr       */
+/*   Updated: 2024/10/23 19:12:07 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,6 @@
 
 /****** STRUCTURES ******/
 
-//supervisor : when 1 philo dies or minimum meal eaten, STOP
-typedef struct s_manager
-{
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*write_lock;
-	pthread_mutex_t	*dying_lock;
-
-	t_philo			*philo;
-
-	int				died;
-	int				nb_of_philo;
-}				t_manager;
-
 //philosophers structure
 typedef struct s_philo
 {
@@ -93,6 +79,20 @@ typedef struct s_philo
 
 }				t_philo;
 
+//supervisor : when 1 philo dies or minimum meal eaten, STOP
+typedef struct s_manager
+{
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*write_lock;
+	pthread_mutex_t	*dying_lock;
+
+	t_philo			*philo;
+
+	int				died;
+	int				nb_of_philo;
+}				t_manager;
+
 /****** FUNCTIONS ******/
 
 /* parsing */
@@ -102,6 +102,10 @@ int			parse_philo(int argc, char **argv);
 /* initialization */
 
 int			init_everything(char **argv, t_philo *philosopher);
+
+/* routine */
+
+void		*routine(void *philo);
 
 /* utils */
 

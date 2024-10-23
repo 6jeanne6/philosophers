@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:25:22 by jewu              #+#    #+#             */
-/*   Updated: 2024/10/21 17:45:37 by jewu             ###   ########.fr       */
+/*   Updated: 2024/10/23 18:47:31 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@
 int	main(int argc, char **argv)
 {
 	int		total_philo;
-	t_philo	*philosopher;
+	t_philo	*socrate;
 
 	if (parse_philo(argc, argv) == FAILURE)
 		return (FAILURE);
 	total_philo = ft_atoll(argv[1]);
-	philosopher = malloc(sizeof(t_philo) * (total_philo + 1));
-	if (!philosopher)
+	socrate = malloc(sizeof(t_philo) * (total_philo + 1));
+	if (!socrate)
 		return (FAILURE);
-	if (init_everything(argv, philosopher) == SUCCESS)
+	if (init_everything(argv, socrate) == SUCCESS)
 	{
 		printf("ca marche !\n");
 	}

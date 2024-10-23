@@ -25,6 +25,7 @@ SRC			=	${SRCDIR}/main.c \
 				${SRCDIR}/parsing.c \
 				${SRCDIR}/utils.c \
 				${SRCDIR}/init.c \
+				${SRCDIR}/routine.c \
 
 ################################################################################
 #                                   Objects                                    #
