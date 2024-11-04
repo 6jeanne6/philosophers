@@ -21,11 +21,12 @@ INCLUDES		= -I ${INCDIR}
 SRCDIR 		= 	srcs
 
 SRC			=	${SRCDIR}/main.c \
-				${SRCDIR}/error.c \
+				${SRCDIR}/clean.c \
 				${SRCDIR}/parsing.c \
 				${SRCDIR}/utils.c \
 				${SRCDIR}/init.c \
 				${SRCDIR}/routine.c \
+				${SRCDIR}/status.c \
 
 ################################################################################
 #                                   Objects                                    #

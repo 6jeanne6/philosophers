@@ -1,16 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:38:02 by jewu              #+#    #+#             */
-/*   Updated: 2024/10/14 14:06:15 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/04 15:08:20 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+//after routine, free and clean everything
+void	clean_everything(t_manager *zeus)
+{
+	int	i;
+
+	i = -1;
+	while (++i < zeus->nb_of_philo)
+		pthread_detach(zeus->philo[i].thread);
+	pthread_mutex_destroy(&zeus->left_fork);
+	pthread_mutex_destroy(&zeus->right_fork);
+	pthread_mutex_destroy(&zeus->write_lock);
+	pthread_mutex_destroy(&zeus->dying_lock);
+	free(zeus->philo);
+	zeus->philo = NULL;
+}
 
 //customized message
 void	print_error_message(char *message)

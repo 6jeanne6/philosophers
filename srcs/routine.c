@@ -6,24 +6,37 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 18:41:16 by jewu              #+#    #+#             */
-/*   Updated: 2024/10/23 19:16:19 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/04 16:47:22 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+//check if philo died to stop or continue simulation
+static int	death_flag(t_philo *socrate)
+{
+	int	rip;
+
+	pthread_mutex_lock(&socrate->dying_lock);
+	rip = socrate->died;
+	pthread_mutex_unlock(&socrate->dying_lock);
+	return (rip);
+}
+
+// thinking = recup des fourchettes
+// philo pair et philo impair
 void	*routine(void *philo)
 {
 	t_philo	*socrate;
+	int		dead;
 
 	socrate = (t_philo *)philo;
-	printf("\n");
-	printf(RED"[%d]: YOU HAVE BEEN CAPYBARA'D\n"RESET, socrate->id);
-	printf(YELLOW"[%d]: MY CAPYBARA IS SO CUTE\n"RESET, socrate->id);
-	printf(WHITE"[%d]: JORINE IS BEST CAPYBARA\n"RESET, socrate->id);
-	printf(GREEN"[%d]: SHE WANTS TO BE WITH ZEANNE\n"RESET, socrate->id);
-	printf(BLUE"[%d]: ZEANNE IS IN MARSEILLE\n"RESET, socrate->id);
-	printf(PURPLE"[%d]: THEY WANNA SEE EACH OTHER\n"RESET, socrate->id);
-	printf(CYAN"[%d]: PLEASE BE HAPPY TOGETHER\n"RESET, socrate->id);
+	dead = 0;
+	while (!death_flag(socrate))
+	{
+		thinking(socrate);
+		sleeping(socrate);
+		eating(socrate);
+	}
 	return (socrate);
 }

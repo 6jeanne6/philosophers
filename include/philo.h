@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:14:58 by jewu              #+#    #+#             */
-/*   Updated: 2024/10/23 19:12:07 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/04 16:45:18 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 
 /****** DEFINE ******/
 
-# define FAILURE 	-1
+# define FAILURE 	1
 # define SUCCESS 	0
 
 /****** COLORS ********/
@@ -61,10 +61,10 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*write_lock;
-	pthread_mutex_t	*dying_lock;
+	pthread_mutex_t	left_fork;
+	pthread_mutex_t	right_fork;
+	pthread_mutex_t	write_lock;
+	pthread_mutex_t	dying_lock;
 
 	size_t			time_to_die;
 	size_t			time_to_eat;
@@ -82,10 +82,10 @@ typedef struct s_philo
 //supervisor : when 1 philo dies or minimum meal eaten, STOP
 typedef struct s_manager
 {
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*write_lock;
-	pthread_mutex_t	*dying_lock;
+	pthread_mutex_t	left_fork;
+	pthread_mutex_t	right_fork;
+	pthread_mutex_t	write_lock;
+	pthread_mutex_t	dying_lock;
 
 	t_philo			*philo;
 
@@ -101,22 +101,29 @@ int			parse_philo(int argc, char **argv);
 
 /* initialization */
 
-int			init_everything(char **argv, t_philo *philosopher);
+int			init_everything(char **argv, t_manager *zeus);
 
 /* routine */
 
 void		*routine(void *philo);
+
+void		thinking(t_philo *socrate);
+void		sleeping(t_philo *socrate);
+void		eating(t_philo *socrate);
+void		dying(t_philo *socrate);
 
 /* utils */
 
 int			ft_atoi(const char *nptr);
 
 void		ft_bzero(void *s, size_t n);
+void		*ft_calloc(size_t nmemb, size_t size);
 
 long long	ft_atoll(const char *nptr);
 
 /* error & free */
 
 void		print_error_message(char *message);
+void		clean_everything(t_manager *zeus);
 
 #endif
