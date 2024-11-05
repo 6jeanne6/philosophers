@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:29:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/04 14:59:54 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/05 12:43:33 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ static void	init_philo_socrate(t_manager *zeus, char **argv)
 		zeus->philo[i].time_to_sleep = ft_atoi(argv[4]);
 		if (argv[5])
 			zeus->philo[i].nb_meals = ft_atoi(argv[5]);
+		pthread_mutex_init(&zeus->philo[i].left_fork, NULL);
+		pthread_mutex_init(&zeus->philo[i].right_fork, NULL);
+		pthread_mutex_init(&zeus->philo[i].write_lock, NULL);
+		pthread_mutex_init(&zeus->philo[i].dying_lock, NULL);
 		pthread_create(&zeus->philo[i].thread, NULL, &routine, &zeus->philo[i]);
 		pthread_join(zeus->philo[i].thread, NULL);
 	}

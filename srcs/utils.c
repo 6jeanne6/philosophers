@@ -6,11 +6,20 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:22:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/04 14:19:29 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/05 13:10:00 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+//print with mutex block
+void	block_print(t_philo *socrate, char *message, char *color)
+{
+	pthread_mutex_lock(&socrate->write_lock);
+	printf("%s%ld %d %s\n"RESET, color, socrate->start_time,
+		socrate->id, message);
+	pthread_mutex_unlock(&socrate->write_lock);
+}
 
 //init all variables to 0
 void	*ft_calloc(size_t nmemb, size_t size)

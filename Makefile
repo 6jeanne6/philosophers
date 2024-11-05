@@ -27,6 +27,7 @@ SRC			=	${SRCDIR}/main.c \
 				${SRCDIR}/init.c \
 				${SRCDIR}/routine.c \
 				${SRCDIR}/status.c \
+				${SRCDIR}/time.c \
 
 ################################################################################
 #                                   Objects                                    #

@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:14:58 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/04 16:45:18 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/05 13:09:43 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,12 @@ typedef struct s_philo
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	dying_lock;
 
-	size_t			time_to_die;
-	size_t			time_to_eat;
-	size_t			time_to_sleep;
-	size_t			countdown;
+	unsigned long	start_time;
+	unsigned long	current_time;
 
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
 	int				id;
 	int				nb_meals;
 	int				meals_eaten;
@@ -112,12 +113,19 @@ void		sleeping(t_philo *socrate);
 void		eating(t_philo *socrate);
 void		dying(t_philo *socrate);
 
+int			chronos_usleep(unsigned long current_time, t_philo *socrate);
+int			death_flag(t_philo *socrate);
+
+long		get_time_ms(void);
+
 /* utils */
 
 int			ft_atoi(const char *nptr);
 
-void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
+
+void		ft_bzero(void *s, size_t n);
+void		block_print(t_philo *socrate, char *message, char *color);
 
 long long	ft_atoll(const char *nptr);
 
