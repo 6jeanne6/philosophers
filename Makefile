@@ -4,7 +4,7 @@
 
 NAME		= philo
 CC			= cc
-CFLAG		= -Wall -Wextra -Werror -g3
+CFLAG		= -Wall -Wextra -Werror -g3 -fsanitize=thread
 
 ################################################################################
 #                                 Include                                      #
@@ -28,6 +28,7 @@ SRC			=	${SRCDIR}/main.c \
 				${SRCDIR}/routine.c \
 				${SRCDIR}/status.c \
 				${SRCDIR}/time.c \
+				${SRCDIR}/utils2.c \
 
 ################################################################################
 #                                   Objects                                    #

@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 10:49:35 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/05 12:42:42 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/06 15:16:22 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,14 @@ long	get_time_ms(void)
 //get current time to be converted in millieseconds
 int	chronos_usleep(unsigned long wait_time, t_philo *socrate)
 {
-	long	start_time;
+	unsigned long	actual_time;
 
-	if (death_flag(socrate))
-		return (FAILURE);
-	start_time = get_time_ms();
-	usleep(wait_time);
+	actual_time = get_time_ms();
+	while ((get_time_ms() - actual_time) < wait_time)
+	{
+		if (death_flag(socrate))
+			return (FAILURE);
+		usleep(100);
+	}
 	return (SUCCESS);
 }

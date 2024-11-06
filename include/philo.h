@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:14:58 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/05 13:09:43 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/06 15:47:46 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,15 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 
-	pthread_mutex_t	left_fork;
+	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	right_fork;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	dying_lock;
+	pthread_mutex_t	meal_lock;
 
 	unsigned long	start_time;
 	unsigned long	current_time;
+	unsigned long	last_meal_time;
 
 	int				time_to_die;
 	int				time_to_eat;
@@ -83,14 +85,14 @@ typedef struct s_philo
 //supervisor : when 1 philo dies or minimum meal eaten, STOP
 typedef struct s_manager
 {
-	pthread_mutex_t	left_fork;
-	pthread_mutex_t	right_fork;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	dying_lock;
+	pthread_mutex_t	meal_lock;
 
 	t_philo			*philo;
 
 	int				died;
+	int				nb_meals;
 	int				nb_of_philo;
 }				t_manager;
 
@@ -111,10 +113,14 @@ void		*routine(void *philo);
 void		thinking(t_philo *socrate);
 void		sleeping(t_philo *socrate);
 void		eating(t_philo *socrate);
-void		dying(t_philo *socrate);
+void		put_down_fork(t_philo *socrate);
+void		pick_up_right_fork(t_philo *socrate);
+void		pick_up_left_fork(t_philo *socrate);
 
 int			chronos_usleep(unsigned long current_time, t_philo *socrate);
 int			death_flag(t_philo *socrate);
+int			zeus_is_listening(t_manager *zeus);
+int			socrate_full(t_manager *zeus);
 
 long		get_time_ms(void);
 
