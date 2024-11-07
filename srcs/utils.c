@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:22:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/06 15:00:30 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/07 17:29:53 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	block_print(t_philo *socrate, char *message, char *color)
 {
 	pthread_mutex_lock(&socrate->write_lock);
 	printf("%s%ld %d %s\n"RESET, color,
-		socrate->current_time - socrate->start_time,
+		get_time_ms() - socrate->start_time,
 		socrate->id, message);
 	pthread_mutex_unlock(&socrate->write_lock);
 }
