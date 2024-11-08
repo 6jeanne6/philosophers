@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 18:41:16 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/07 17:24:30 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/08 17:40:01 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,15 @@ void	*routine(void *philo)
 	socrate = (t_philo *)philo;
 	pthread_mutex_lock(&socrate->meal_lock);
 	socrate->start_time = get_time_ms();
+	pthread_mutex_unlock(&socrate->meal_lock);
+	pthread_mutex_lock(&socrate->meal_lock);
 	socrate->last_meal_time = socrate->start_time;
 	pthread_mutex_unlock(&socrate->meal_lock);
 	while (!death_flag(socrate))
 	{
+		thinking(socrate);
 		eating(socrate);
 		sleeping(socrate);
-		thinking(socrate);
 	}
 	return (socrate);
 }

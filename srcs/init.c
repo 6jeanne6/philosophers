@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:29:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/07 18:06:52 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/08 16:33:43 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void	init_philo_socrate(t_manager *zeus, char **argv)
 		zeus->philo[i].write_lock = zeus->write_lock;
 		zeus->philo[i].dying_lock = zeus->dying_lock;
 		zeus->philo[i].meal_lock = zeus->meal_lock;
+		zeus->philo[i].last_meal_lock = zeus->last_meal_lock;
 		zeus->philo[i].finish_eating_lock = zeus->finish_eating_lock;
 	}
 	zeus->philo[0].left_fork = &zeus->philo[i - 1].right_fork;
@@ -45,6 +46,7 @@ static void	init_mutex_zeus(t_manager *zeus)
 	pthread_mutex_init(&zeus->write_lock, NULL);
 	pthread_mutex_init(&zeus->dying_lock, NULL);
 	pthread_mutex_init(&zeus->meal_lock, NULL);
+	pthread_mutex_init(&zeus->last_meal_lock, NULL);
 	pthread_mutex_init(&zeus->finish_eating_lock, NULL);
 }
 
@@ -53,6 +55,7 @@ static void	launch_philo(t_manager *zeus)
 	int	i;
 
 	i = -1;
+	chronos_usleep(100, &zeus->philo[0]);
 	while (1)
 	{
 		if (zeus_is_listening(zeus) == FAILURE

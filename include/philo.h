@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:14:58 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/07 18:07:31 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/08 16:44:55 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_philo
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	dying_lock;
 	pthread_mutex_t	meal_lock;
+	pthread_mutex_t	last_meal_lock;
 	pthread_mutex_t	finish_eating_lock;
 
 	unsigned long	last_meal_time;
@@ -73,6 +74,7 @@ typedef struct s_philo
 	long			start_time;
 	long			current_time;
 
+	int				first_meal;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -90,6 +92,7 @@ typedef struct s_manager
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	dying_lock;
 	pthread_mutex_t	meal_lock;
+	pthread_mutex_t	last_meal_lock;
 	pthread_mutex_t	finish_eating_lock;
 
 	t_philo			*philo;

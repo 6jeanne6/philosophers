@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 12:50:39 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/07 18:21:06 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/08 17:18:10 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static int	kill_all_philos(t_manager *zeus)
 	i = -1;
 	while (++i < zeus->nb_of_philo)
 	{
-		if (death_flag(&zeus->philo[i]) == 0)
+		if ((death_flag(&zeus->philo[i]) == 0)
+			|| (get_full_philo(&zeus->philo[i])) == zeus->nb_meals)
 		{
 			pthread_mutex_lock(&zeus->philo[i].dying_lock);
 			zeus->philo[i].died = 1;
@@ -34,7 +35,6 @@ static int	kill_all_philos(t_manager *zeus)
 int	socrate_full(t_manager *zeus)
 {
 	int	i;
-	int	meal_eaten;
 
 	i = -1;
 	if (zeus->nb_meals == 0)
@@ -43,16 +43,30 @@ int	socrate_full(t_manager *zeus)
 		return (FAILURE);
 	while (++i < zeus->nb_of_philo)
 	{
-		meal_eaten = get_meals_eaten(&zeus->philo[i]);
-		pthread_mutex_lock(&zeus->meal_lock);
-		if (meal_eaten < zeus->nb_meals)
+		if (get_meals_eaten(&zeus->philo[i]) >= zeus->nb_meals)
 		{
-			pthread_mutex_unlock(&zeus->meal_lock);
-			return (FAILURE);
+			kill_all_philos(zeus);
+			return (SUCCESS);
 		}
-		pthread_mutex_unlock(&zeus->meal_lock);
 	}
-	return (SUCCESS);
+	return (FAILURE);
+}
+
+//check if last meal is superior to time to eat
+static int	check_time(t_philo *socrate)
+{
+	long	last_meal;
+
+	last_meal = when_last_meal(socrate);
+	if ((get_time_ms() - last_meal)
+		>= (long)socrate->time_to_die)
+	{
+		pthread_mutex_lock(&socrate->dying_lock);
+		socrate->died = 1;
+		pthread_mutex_unlock(&socrate->dying_lock);
+		return (1);
+	}
+	return (0);
 }
 
 //zeus checks if a socrate died
@@ -60,23 +74,20 @@ int	socrate_full(t_manager *zeus)
 int	zeus_is_listening(t_manager *zeus)
 {
 	int		i;
-	long	last_meal;
 
 	i = -1;
 	while (++i < zeus->nb_of_philo)
 	{
-		last_meal = when_last_meal(&zeus->philo[i]);
-		if ((get_time_ms() - last_meal)
-			>= (long)zeus->philo[i].time_to_die)
+		if (check_time(&zeus->philo[i]))
 		{
-			pthread_mutex_lock(&zeus->philo[i].dying_lock);
-			if (zeus->philo[i].died == 0)
-				zeus->philo[i].died = 1;
-			pthread_mutex_unlock(&zeus->philo[i].dying_lock);
-			//if (get_meals_eaten(&zeus->philo[i]) < zeus->nb_meals)
-			block_print(&zeus->philo[i], "died", RED);
-			if (kill_all_philos(zeus) == 1)
-				return (1);
+			i = -1;
+			while (++i < zeus->nb_of_philo)
+			{
+				if (zeus->nb_meals != 0)
+					block_print(&zeus->philo[i], "died", RED);
+				if (kill_all_philos(zeus) == 1)
+					return (1);
+			}
 		}
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 10:55:44 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/07 18:07:17 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/08 16:34:28 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	get_full_philo(t_philo *socrate)
 {
 	int	full_philo;
 
-	pthread_mutex_lock(&socrate->meal_lock);
+	pthread_mutex_lock(&socrate->finish_eating_lock);
 	full_philo = socrate->full;
-	pthread_mutex_unlock(&socrate->meal_lock);
+	pthread_mutex_unlock(&socrate->finish_eating_lock);
 	return (full_philo);
 }
 
@@ -38,9 +38,9 @@ long	when_last_meal(t_philo *socrate)
 {
 	long	last_meal;
 
-	pthread_mutex_lock(&socrate->meal_lock);
+	pthread_mutex_lock(&socrate->last_meal_lock);
 	last_meal = socrate->last_meal_time;
-	pthread_mutex_unlock(&socrate->meal_lock);
+	pthread_mutex_unlock(&socrate->last_meal_lock);
 	return (last_meal);
 }
 
