@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:22:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/07 17:29:53 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/11 17:35:36 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 //print with mutex block
 void	block_print(t_philo *socrate, char *message, char *color)
 {
-	pthread_mutex_lock(&socrate->write_lock);
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+		return ;
+	pthread_mutex_lock(socrate->write_lock);
 	printf("%s%ld %d %s\n"RESET, color,
 		get_time_ms() - socrate->start_time,
 		socrate->id, message);
-	pthread_mutex_unlock(&socrate->write_lock);
+	pthread_mutex_unlock(socrate->write_lock);
 }
 
 //init all variables to 0
@@ -69,7 +71,6 @@ int	ft_atoi(const char *nptr)
 	}
 	return (result * sign);
 }
-
 
 //is able to display long
 long	long	ft_atoll(const char *nptr)

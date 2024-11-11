@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:56:51 by jewu              #+#    #+#             */
-/*   Updated: 2024/10/17 17:27:17 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/11 14:31:28 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	parse_philo(int argc, char **argv)
 	}
 	while (argv[++i])
 	{
-		if (ft_atoll(argv[1]) == 0 || ft_atoll(argv[1]) > 199)
+		if (ft_atoll(argv[1]) == 0 || ft_atoll(argv[1]) > 200)
 		{
 			print_error_message(RED"Check your number of philosophers\n"RESET);
 			return (FAILURE);

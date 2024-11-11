@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:29:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/08 16:33:43 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/11 17:36:34 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void	init_philo_socrate(t_manager *zeus, char **argv)
 	while (++i < zeus->nb_of_philo)
 	{
 		zeus->philo[i].id = i + 1;
+		zeus->philo[i].nb_of_philo = zeus->nb_of_philo;
 		zeus->philo[i].time_to_die = ft_atoi(argv[2]);
 		zeus->philo[i].time_to_eat = ft_atoi(argv[3]);
 		zeus->philo[i].time_to_sleep = ft_atoi(argv[4]);
@@ -31,11 +32,11 @@ static void	init_philo_socrate(t_manager *zeus, char **argv)
 		pthread_mutex_init(&zeus->philo[i].right_fork, NULL);
 		if (i != 0)
 			zeus->philo[i].left_fork = &zeus->philo[i - 1].right_fork;
-		zeus->philo[i].write_lock = zeus->write_lock;
-		zeus->philo[i].dying_lock = zeus->dying_lock;
-		zeus->philo[i].meal_lock = zeus->meal_lock;
-		zeus->philo[i].last_meal_lock = zeus->last_meal_lock;
-		zeus->philo[i].finish_eating_lock = zeus->finish_eating_lock;
+		zeus->philo[i].write_lock = &zeus->write_lock;
+		zeus->philo[i].dying_lock = &zeus->dying_lock;
+		zeus->philo[i].meal_lock = &zeus->meal_lock;
+		zeus->philo[i].last_meal_lock = &zeus->last_meal_lock;
+		zeus->philo[i].finish_eating_lock = &zeus->finish_eating_lock;
 	}
 	zeus->philo[0].left_fork = &zeus->philo[i - 1].right_fork;
 }
@@ -50,6 +51,8 @@ static void	init_mutex_zeus(t_manager *zeus)
 	pthread_mutex_init(&zeus->finish_eating_lock, NULL);
 }
 
+//wait a bit and launch supervisor to check if
+//time exceeded death time or philo is full
 static void	launch_philo(t_manager *zeus)
 {
 	int	i;

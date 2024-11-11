@@ -6,25 +6,11 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 18:41:16 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/08 17:40:01 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/11 16:18:45 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-//pick up left fork
-void	pick_up_left_fork(t_philo *socrate)
-{
-	pthread_mutex_lock(socrate->left_fork);
-	block_print(socrate, "has taken a fork", YELLOW);
-}
-
-//pick up left fork
-void	pick_up_right_fork(t_philo *socrate)
-{
-	pthread_mutex_lock(&socrate->right_fork);
-	block_print(socrate, "has taken a fork", YELLOW);
-}
 
 //put down left/right fork
 //odd = taken left and right, put down right then left
@@ -50,17 +36,20 @@ void	*routine(void *philo)
 	t_philo	*socrate;
 
 	socrate = (t_philo *)philo;
-	pthread_mutex_lock(&socrate->meal_lock);
+	pthread_mutex_lock(socrate->meal_lock);
 	socrate->start_time = get_time_ms();
-	pthread_mutex_unlock(&socrate->meal_lock);
-	pthread_mutex_lock(&socrate->meal_lock);
+	pthread_mutex_unlock(socrate->meal_lock);
+	pthread_mutex_lock(socrate->meal_lock);
 	socrate->last_meal_time = socrate->start_time;
-	pthread_mutex_unlock(&socrate->meal_lock);
+	pthread_mutex_unlock(socrate->meal_lock);
 	while (!death_flag(socrate))
 	{
-		thinking(socrate);
-		eating(socrate);
-		sleeping(socrate);
+		if (thinking(socrate) == FAILURE)
+			break ;
+		if (eating(socrate) == FAILURE)
+			break ;
+		if (sleeping(socrate) == FAILURE)
+			break ;
 	}
 	return (socrate);
 }

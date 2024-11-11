@@ -6,95 +6,99 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 15:21:17 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/08 17:28:34 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/11 17:36:58 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 //time socrate will spend sleeping
-void	sleeping(t_philo *socrate)
+int	sleeping(t_philo *socrate)
 {
-	if (death_flag(socrate))
-		return ;
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+		return (FAILURE);
 	block_print(socrate, "is sleeping", WHITE);
 	chronos_usleep(socrate->time_to_sleep, socrate);
+	return (SUCCESS);
 }
 
 //socrate needs 2 forks when eating
 //time it takes for socrate to eat
-void	eating(t_philo *socrate)
+int	eating(t_philo *socrate)
 {
-	if (death_flag(socrate))
-		return ;
-	pthread_mutex_lock(&socrate->meal_lock);
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+		return (put_down_fork(socrate), FAILURE);
+	pthread_mutex_lock(socrate->meal_lock);
 	socrate->meals_eaten++;
-	pthread_mutex_unlock(&socrate->meal_lock);
-	pthread_mutex_lock(&socrate->last_meal_lock);
+	pthread_mutex_unlock(socrate->meal_lock);
+	pthread_mutex_lock(socrate->last_meal_lock);
 	socrate->last_meal_time = get_time_ms();
-	pthread_mutex_unlock(&socrate->last_meal_lock);
+	pthread_mutex_unlock(socrate->last_meal_lock);
 	block_print(socrate, "is eating", GREEN);
 	chronos_usleep(socrate->time_to_eat, socrate);
 	put_down_fork(socrate);
+	return (SUCCESS);
 }
 
 //odd philo thinks
-static void	odd_socrate_thinking(t_philo *socrate, long think_time)
+static int	odd_socrate_thinking(t_philo *socrate, long think_time)
 {
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+		return (FAILURE);
 	block_print(socrate, "is thinking", CYAN);
-	chronos_usleep(think_time, socrate);
-	if (death_flag(socrate))
-		return ;
+	chronos_usleep(think_time + 5, socrate);
 	pthread_mutex_lock(&socrate->right_fork);
 	block_print(socrate, "has taken a fork", YELLOW);
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals
+		|| socrate->nb_of_philo == 1)
+		return (pthread_mutex_unlock(&socrate->right_fork), FAILURE);
 	pthread_mutex_lock(socrate->left_fork);
 	block_print(socrate, "has taken a fork", YELLOW);
+	return (SUCCESS);
 }
 
 //even philo thinks
-static void	even_socrate_thinking(t_philo *socrate, long think_time)
+static int	even_socrate_thinking(t_philo *socrate)
 {
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+		return (FAILURE);
 	block_print(socrate, "is thinking", CYAN);
 	if (socrate->first_meal == 0)
 	{
 		socrate->first_meal = 1;
-		chronos_usleep(think_time, socrate);
+		if (chronos_usleep(socrate->time_to_eat, socrate) == FAILURE)
+			return (FAILURE);
 	}
-	else
-		chronos_usleep(think_time, socrate);
-	if (death_flag(socrate))
-		return ;
 	pthread_mutex_lock(socrate->left_fork);
 	block_print(socrate, "has taken a fork", YELLOW);
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+		return (pthread_mutex_unlock(socrate->left_fork), FAILURE);
 	pthread_mutex_lock(&socrate->right_fork);
 	block_print(socrate, "has taken a fork", YELLOW);
+	return (SUCCESS);
 }
 
 //if fork not available socrate will think
-//thiking time = eat - sleep
-void	thinking(t_philo *socrate)
+//thiking time if number of philo is odd = eat - sleep
+int	thinking(t_philo *socrate)
 {
 	long	time_to_think;
 
-	if (death_flag(socrate))
-		return ;
-	if (socrate->time_to_eat > socrate->time_to_sleep)
-		time_to_think = socrate->time_to_eat - socrate->time_to_sleep;
-	else
-		time_to_think = socrate->time_to_eat;
-	if (socrate->id % 2 == 0)
+	time_to_think = 0;
+	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+		return (FAILURE);
+	if (socrate->nb_of_philo % 2 != 0
+		&& socrate->time_to_eat > socrate->time_to_sleep)
+			time_to_think = socrate->time_to_eat - socrate->time_to_sleep;
+	if (socrate->id % 2 != 0)
 	{
-		//pick_up_left_fork(socrate);
-		// pick_up_right_fork(socrate);
-		even_socrate_thinking(socrate, time_to_think);
+		if (odd_socrate_thinking(socrate, time_to_think) == FAILURE)
+			return (FAILURE);
 	}
 	else
 	{
-		// pick_up_right_fork(socrate);
-		// pick_up_left_fork(socrate);
-		odd_socrate_thinking(socrate, time_to_think);
+		if (even_socrate_thinking(socrate) == FAILURE)
+			return (FAILURE);
 	}
-	// time_to_think = socrate->time_to_eat - socrate->time_to_sleep;
-	// block_print(socrate, "is thinking", CYAN);
-	// chronos_usleep(time_to_think, socrate);
+	return (SUCCESS);
 }

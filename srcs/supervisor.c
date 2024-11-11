@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 12:50:39 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/08 17:18:10 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/11 16:21:13 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,9 @@ static int	kill_all_philos(t_manager *zeus)
 	i = -1;
 	while (++i < zeus->nb_of_philo)
 	{
-		if ((death_flag(&zeus->philo[i]) == 0)
-			|| (get_full_philo(&zeus->philo[i])) == zeus->nb_meals)
-		{
-			pthread_mutex_lock(&zeus->philo[i].dying_lock);
-			zeus->philo[i].died = 1;
-			pthread_mutex_unlock(&zeus->philo[i].dying_lock);
-		}
+		pthread_mutex_lock(zeus->philo[i].dying_lock);
+		zeus->philo[i].died = 1;
+		pthread_mutex_unlock(zeus->philo[i].dying_lock);
 	}
 	return (1);
 }
@@ -61,9 +57,11 @@ static int	check_time(t_philo *socrate)
 	if ((get_time_ms() - last_meal)
 		>= (long)socrate->time_to_die)
 	{
-		pthread_mutex_lock(&socrate->dying_lock);
+		if (socrate->nb_meals != 0)
+			block_print(socrate, "died", RED);
+		pthread_mutex_lock(socrate->dying_lock);
 		socrate->died = 1;
-		pthread_mutex_unlock(&socrate->dying_lock);
+		pthread_mutex_unlock(socrate->dying_lock);
 		return (1);
 	}
 	return (0);
@@ -83,8 +81,6 @@ int	zeus_is_listening(t_manager *zeus)
 			i = -1;
 			while (++i < zeus->nb_of_philo)
 			{
-				if (zeus->nb_meals != 0)
-					block_print(&zeus->philo[i], "died", RED);
 				if (kill_all_philos(zeus) == 1)
 					return (1);
 			}
