@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:14:58 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/11 15:29:44 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/12 14:56:10 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ typedef struct s_manager
 	pthread_mutex_t	finish_eating_lock;
 
 	t_philo			*philo;
+
+	long			start_time;
 
 	int				died;
 	int				nb_meals;
