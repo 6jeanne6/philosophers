@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:22:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/11 17:35:36 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/12 11:35:32 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //print with mutex block
 void	block_print(t_philo *socrate, char *message, char *color)
 {
-	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+	if (death_flag(socrate))
 		return ;
 	pthread_mutex_lock(socrate->write_lock);
 	printf("%s%ld %d %s\n"RESET, color,

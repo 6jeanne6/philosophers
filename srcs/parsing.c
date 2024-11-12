@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:56:51 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/11 14:31:28 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/12 11:52:00 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	check_each_argument(char *str)
 {
 	if (ft_is_positive_number(str) == FAILURE)
 	{
-		print_error_message(RED"This is not a positive number\n"RESET);
+		print_error_message(RED"Check your arguments\n"RESET);
 		return (FAILURE);
 	}
 	if (check_overflow_number(str) == FAILURE)

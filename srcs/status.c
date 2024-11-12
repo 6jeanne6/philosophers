@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 15:21:17 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/11 17:36:58 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/12 11:40:16 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ int	eating(t_philo *socrate)
 {
 	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
 		return (put_down_fork(socrate), FAILURE);
-	pthread_mutex_lock(socrate->meal_lock);
-	socrate->meals_eaten++;
-	pthread_mutex_unlock(socrate->meal_lock);
 	pthread_mutex_lock(socrate->last_meal_lock);
 	socrate->last_meal_time = get_time_ms();
 	pthread_mutex_unlock(socrate->last_meal_lock);
 	block_print(socrate, "is eating", GREEN);
 	chronos_usleep(socrate->time_to_eat, socrate);
+	pthread_mutex_lock(socrate->meal_lock);
+	socrate->meals_eaten++;
+	pthread_mutex_unlock(socrate->meal_lock);
 	put_down_fork(socrate);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 18:41:16 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/11 16:18:45 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/11 18:39:26 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,5 @@ void	*routine(void *philo)
 		if (sleeping(socrate) == FAILURE)
 			break ;
 	}
-	return (socrate);
+	return (NULL);
 }
