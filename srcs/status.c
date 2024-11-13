@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 15:21:17 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/12 11:40:16 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/13 17:18:57 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	odd_socrate_thinking(t_philo *socrate, long think_time)
 }
 
 //even philo thinks
-static int	even_socrate_thinking(t_philo *socrate)
+static int	even_socrate_thinking(t_philo *socrate, long think_time)
 {
 	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
 		return (FAILURE);
@@ -69,6 +69,8 @@ static int	even_socrate_thinking(t_philo *socrate)
 		if (chronos_usleep(socrate->time_to_eat, socrate) == FAILURE)
 			return (FAILURE);
 	}
+	else if (think_time)
+		chronos_usleep(think_time, socrate);
 	pthread_mutex_lock(socrate->left_fork);
 	block_print(socrate, "has taken a fork", YELLOW);
 	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
@@ -97,7 +99,7 @@ int	thinking(t_philo *socrate)
 	}
 	else
 	{
-		if (even_socrate_thinking(socrate) == FAILURE)
+		if (even_socrate_thinking(socrate, time_to_think) == FAILURE)
 			return (FAILURE);
 	}
 	return (SUCCESS);
