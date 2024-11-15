@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 15:21:17 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/13 17:18:57 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/13 18:00:48 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //time socrate will spend sleeping
 int	sleeping(t_philo *socrate)
 {
-	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+	if (death_flag(socrate) || socrate->meals_eaten == socrate->nb_meals)
 		return (FAILURE);
 	block_print(socrate, "is sleeping", WHITE);
 	chronos_usleep(socrate->time_to_sleep, socrate);
@@ -26,7 +26,7 @@ int	sleeping(t_philo *socrate)
 //time it takes for socrate to eat
 int	eating(t_philo *socrate)
 {
-	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+	if (death_flag(socrate) || socrate->meals_eaten == socrate->nb_meals)
 		return (put_down_fork(socrate), FAILURE);
 	pthread_mutex_lock(socrate->last_meal_lock);
 	socrate->last_meal_time = get_time_ms();
@@ -43,7 +43,7 @@ int	eating(t_philo *socrate)
 //odd philo thinks
 static int	odd_socrate_thinking(t_philo *socrate, long think_time)
 {
-	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+	if (death_flag(socrate) || socrate->meals_eaten == socrate->nb_meals)
 		return (FAILURE);
 	block_print(socrate, "is thinking", CYAN);
 	chronos_usleep(think_time + 5, socrate);
@@ -60,7 +60,7 @@ static int	odd_socrate_thinking(t_philo *socrate, long think_time)
 //even philo thinks
 static int	even_socrate_thinking(t_philo *socrate, long think_time)
 {
-	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+	if (death_flag(socrate) || socrate->meals_eaten == socrate->nb_meals)
 		return (FAILURE);
 	block_print(socrate, "is thinking", CYAN);
 	if (socrate->first_meal == 0)
@@ -87,7 +87,7 @@ int	thinking(t_philo *socrate)
 	long	time_to_think;
 
 	time_to_think = 0;
-	if (death_flag(socrate) || get_meals_eaten(socrate) == socrate->nb_meals)
+	if (death_flag(socrate) || socrate->meals_eaten == socrate->nb_meals)
 		return (FAILURE);
 	if (socrate->nb_of_philo % 2 != 0
 		&& socrate->time_to_eat > socrate->time_to_sleep)
