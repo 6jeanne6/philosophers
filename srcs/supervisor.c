@@ -6,7 +6,7 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 12:50:39 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/12 11:29:48 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/26 10:55:26 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ static int	kill_all_philos(t_manager *zeus)
 int	socrate_full(t_manager *zeus)
 {
 	int	i;
+	int	nb_philo;
 
 	i = -1;
+	nb_philo = 0;
 	if (zeus->nb_meals == 0)
 		return (SUCCESS);
 	if (zeus->nb_meals == -1)
@@ -41,8 +43,12 @@ int	socrate_full(t_manager *zeus)
 	{
 		if (get_meals_eaten(&zeus->philo[i]) >= zeus->nb_meals)
 		{
-			kill_all_philos(zeus);
-			return (SUCCESS);
+			nb_philo++;
+			if (nb_philo == zeus->nb_of_philo)
+			{
+				kill_all_philos(zeus);
+				return (SUCCESS);
+			}
 		}
 	}
 	return (FAILURE);

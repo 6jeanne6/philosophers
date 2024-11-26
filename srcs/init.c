@@ -6,11 +6,19 @@
 /*   By: jewu <jewu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:29:06 by jewu              #+#    #+#             */
-/*   Updated: 2024/11/12 14:56:35 by jewu             ###   ########.fr       */
+/*   Updated: 2024/11/15 12:57:35 by jewu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	set_number_meals(t_philo *socrate, char **argv)
+{
+	if (argv[5])
+		socrate->nb_meals = ft_atoi(argv[5]);
+	else
+		socrate->nb_meals = -1;
+}
 
 //prepare philosopher array in zeus
 static void	init_philo_socrate(t_manager *zeus, char **argv)
@@ -23,13 +31,11 @@ static void	init_philo_socrate(t_manager *zeus, char **argv)
 		zeus->philo[i].id = i + 1;
 		zeus->philo[i].nb_of_philo = zeus->nb_of_philo;
 		zeus->philo[i].start_time = zeus->start_time;
+		zeus->philo[i].last_meal_time = zeus->start_time;
 		zeus->philo[i].time_to_die = ft_atoi(argv[2]);
 		zeus->philo[i].time_to_eat = ft_atoi(argv[3]);
 		zeus->philo[i].time_to_sleep = ft_atoi(argv[4]);
-		if (argv[5])
-			zeus->philo[i].nb_meals = ft_atoi(argv[5]);
-		else
-			zeus->philo[i].nb_meals = -1;
+		set_number_meals(&zeus->philo[i], argv);
 		pthread_mutex_init(&zeus->philo[i].right_fork, NULL);
 		if (i != 0)
 			zeus->philo[i].left_fork = &zeus->philo[i - 1].right_fork;
